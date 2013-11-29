@@ -23,7 +23,7 @@ class GitHub
 
   # Public: Find the release's assets with tag_name {tag}.
   getAssetsOfTag: (tag, callback) ->
-    @getReleaseOfTag (error, release) =>
+    @getReleaseOfTag tag, (error, release) =>
       return callback(error) if error?
       @callRepoApi "releases/#{release.id}/assets", callback
 

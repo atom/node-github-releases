@@ -5,11 +5,12 @@ GitHub = require '../lib/github'
 
 options = optimist
   .usage("""
-    Usage: github-releases [--tag==<tag>] [--token=<token>] <command> <repo>
+    Usage: github-releases [--tag==<tag>] [--filename=<filename>] [--token=<token>] <command> <repo>
   """)
   .alias('h', 'help').describe('help', 'Print this usage message')
   .string('token').describe('token', 'Your GitHub token')
   .string('tag').describe('tag', 'The tag of the release')
+  .string('filename').describe('filename', 'The filename of the asset')
 
 print = (error, result) ->
   if error?
@@ -39,7 +40,15 @@ run = (github, command, argv, callback) ->
           github.getLatestAssets.bind github
       getAssets callback
 
-    when 'download-release-assets'
+    when 'download-asset'
+      run github, 'get-assets', argv, (error, assets) ->
+        return print(error) if error?
+        for asset in assets when asset.state is 'uploaded' and asset.name is argv.filename
+          return github.downloadAsset asset, (error, stream) ->
+            return console.error("Unable to download #{asset.name}") if error?
+            stream.pipe fs.createWriteStream(asset.name)
+
+    when 'download-assets'
       run github, 'get-assets', argv, (error, assets) ->
         return print(error) if error?
         for asset in assets when asset.state is 'uploaded'

@@ -33,6 +33,12 @@ class GitHub
       return callback(error) if error?
       callback null, releases[0]
 
+  # Public: Get the assets of latest release.
+  getLatestAssets: (callback) ->
+    @getLatestRelease (error, release) =>
+      return callback(error) if error?
+      @callRepoApi "releases/#{release.id}/assets", callback
+
   # Public: Download the {asset}.
   #
   # The {callback} would be called with the downloaded file's {ReadableStream}.

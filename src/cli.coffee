@@ -24,17 +24,25 @@ run = (github, command, argv, callback) ->
       github.getReleases print
 
     when 'get-release'
-      download =
+      getRelease =
         if argv.tag?
           github.getReleaseOfTag.bind github, argv.tag
         else
           github.getLatestRelease.bind github
-      download callback
+      getRelease callback
+
+    when 'get-assets'
+      getAssets =
+        if argv.tag?
+          github.getAssetsOfTag.bind github, argv.tag
+        else
+          github.getLatestAssets.bind github
+      getAssets callback
 
     when 'download-release-assets'
-      run github, 'get-release', argv, (error, release) ->
+      run github, 'get-assets', argv, (error, assets) ->
         return print(error) if error?
-        for asset in release.assets when asset.state is 'uploaded'
+        for asset in assets when asset.state is 'uploaded'
           do (asset) ->
             github.downloadAsset asset, (error, stream) ->
               return console.error("Unable to download #{asset.name}") if error?

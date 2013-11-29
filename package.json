@@ -1,0 +1,38 @@
+{
+  "name": "github-releases",
+  "description": "Node module for using GitHub Releases feature",
+  "version": "0.1.0",
+  "bin": {
+    "github-releases": "bin/github-releases"
+  },
+  "scripts": {
+    "prepublish": "grunt coffee"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.6.6",
+    "grunt-coffeelint": "~0.0.6",
+    "grunt-cli": "~0.1.7",
+    "grunt-shell": "~0.2.2",
+    "rimraf": "~2.1.4",
+    "coffee-script": "~1.6.2"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/atom/node-github-releases/raw/master/LICENSE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atom/node-github-releases.git"
+  },
+  "homepage": {
+    "url": "https://github.com/atom/node-github-releases"
+  },
+  "bugs": {
+    "url": "https://github.com/atom/node-github-releases/issues"
+  }
+}

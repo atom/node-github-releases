@@ -17,7 +17,7 @@ class GitHub
     @getReleases (error, releases) ->
       return callback(error) if error?
 
-      for release in releases when release.tag_name is version
+      for release in releases when release.tag_name is tag
         return callback null, release
       return callback(new Error("Cannot find release with tag_name of #{tag}"))
 

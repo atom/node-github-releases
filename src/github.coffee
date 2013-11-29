@@ -1,5 +1,4 @@
 request = require 'request'
-formidable = require 'formidable'
 
 class GitHub
   repo: null
@@ -52,12 +51,7 @@ class GitHub
       else if response.statusCode isnt 200
         return callback new Error("Request failed with code #{response.statusCode}")
 
-      # Parse multipart data.
-      form = new formidable.IncomingForm
-      form.once 'file', (name, file) ->
-        callback null, fs.createReadStream(file.path)
-      form.parse response, (error) ->
-        callback(error) if error?
+      callback null, response
 
   # Private: Call the repos API.
   callRepoApi: (path, callback) ->

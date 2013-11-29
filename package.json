@@ -10,7 +10,8 @@
     "prepublish": "grunt coffee"
   },
   "dependencies": {
-    "optimist": "0.4.0",
+    "optimist": "~0.4.0",
+    "prettyjson": "~0.8.1",
     "request": "~2.27.0"
   },
   "devDependencies": {

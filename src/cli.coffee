@@ -1,6 +1,6 @@
 fs = require 'fs'
-util = require 'util'
 optimist = require 'optimist'
+prettyjson = require 'prettyjson'
 GitHub = require '../lib/github'
 
 options = optimist
@@ -16,7 +16,7 @@ print = (error, result) ->
     message = error.message ? error
     console.error "Command failed with error: #{message}"
   else
-    console.log result
+    console.log prettyjson.render(result)
 
 run = (github, command, argv, callback) ->
   switch command

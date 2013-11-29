@@ -1,5 +1,5 @@
 request = require 'request'
-multiparty = require 'multiparty'
+formidable = require 'formidable'
 
 class GitHub
   repo: null
@@ -34,12 +34,6 @@ class GitHub
       return callback(error) if error?
       callback null, releases[0]
 
-  # Public: Get the assets of latest release.
-  getLatestAssets: (callback) ->
-    @getLatestRelease (error, release) =>
-      return callback(error) if error?
-      @callRepoApi "releases/#{release.id}/assets", callback
-
   # Public: Download the {asset}.
   #
   # The {callback} would be called with the downloaded file's {ReadableStream}.
@@ -55,11 +49,13 @@ class GitHub
       # Manually handle redirection so headers would not be sent for S3.
       if response.statusCode is 302
         return @downloadAssetOfUrl response.headers.location, callback
+      else if response.statusCode isnt 200
+        return callback new Error("Request failed with code #{response.statusCode}")
 
       # Parse multipart data.
-      form = new multiparty.Form
-      form.once 'part', (part) ->
-        callback null, part
+      form = new formidable.IncomingForm
+      form.once 'file', (name, file) ->
+        callback null, fs.createReadStream(file.path)
       form.parse response, (error) ->
         callback(error) if error?
 
@@ -78,7 +74,7 @@ class GitHub
     request options, (error, response, body) ->
       if not error?
         data = JSON.parse(body)
-        error = new Error(body.message) if response.statusCode != 200
+        error = new Error(data.message) if response.statusCode != 200
       callback(error, data)
 
   # Private: Get the options for downloading asset.

@@ -21,23 +21,11 @@ class GitHub
         return callback null, release
       return callback(new Error("Cannot find release with tag_name of #{tag}"))
 
-  # Public: Find the release's assets with tag_name {tag}.
-  getAssetsOfTag: (tag, callback) ->
-    @getReleaseOfTag tag, (error, release) =>
-      return callback(error) if error?
-      @callRepoApi "releases/#{release.id}/assets", callback
-
   # Public: Get the latest release.
   getLatestRelease: (callback) ->
     @getReleases (error, releases) ->
       return callback(error) if error?
       callback null, releases[0]
-
-  # Public: Get the assets of latest release.
-  getLatestAssets: (callback) ->
-    @getLatestRelease (error, release) =>
-      return callback(error) if error?
-      @callRepoApi "releases/#{release.id}/assets", callback
 
   # Public: Download the {asset}.
   #

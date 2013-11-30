@@ -33,12 +33,9 @@ run = (github, command, argv, callback) ->
       getRelease callback
 
     when 'get-assets'
-      getAssets =
-        if argv.tag?
-          github.getAssetsOfTag.bind github, argv.tag
-        else
-          github.getLatestAssets.bind github
-      getAssets callback
+      run github, 'get-release', argv, (error, release) ->
+        return print(error) if error?
+        callback null, release.assets
 
     when 'download-asset'
       run github, 'get-assets', argv, (error, assets) ->

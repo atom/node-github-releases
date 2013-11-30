@@ -12,7 +12,8 @@
   "dependencies": {
     "optimist": "~0.4.0",
     "prettyjson": "~0.8.1",
-    "request": "~2.27.0"
+    "request": "~2.27.0",
+    "minimatch": "0.2.12"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

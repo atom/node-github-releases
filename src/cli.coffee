@@ -1,7 +1,8 @@
-fs = require 'fs'
-optimist = require 'optimist'
+fs         = require 'fs'
+optimist   = require 'optimist'
 prettyjson = require 'prettyjson'
-GitHub = require '../lib/github'
+minimatch  = require 'minimatch'
+GitHub     = require '../lib/github'
 
 options = optimist
   .usage("""
@@ -48,7 +49,7 @@ run = (github, command, argv, callback) ->
     when 'download-assets'
       run github, 'get-assets', argv, (error, assets) ->
         return print(error) if error?
-        for asset in assets when asset.state is 'uploaded'
+        for asset in assets when asset.state is 'uploaded' and minimatch asset.name, argv.filename
           do (asset) ->
             github.downloadAsset asset, (error, stream) ->
               return console.error("Unable to download #{asset.name}") if error?

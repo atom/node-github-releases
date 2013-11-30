@@ -22,10 +22,10 @@ print = (error, result) ->
 
 run = (github, command, argv, callback) ->
   switch command
-    when 'list-releases'
+    when 'list'
       github.getReleases print
 
-    when 'get-release'
+    when 'show'
       getRelease =
         if argv.tag?
           github.getReleaseOfTag.bind github, argv.tag
@@ -33,20 +33,7 @@ run = (github, command, argv, callback) ->
           github.getLatestRelease.bind github
       getRelease callback
 
-    when 'get-assets'
-      run github, 'get-release', argv, (error, release) ->
-        return print(error) if error?
-        callback null, release.assets
-
-    when 'download-asset'
-      run github, 'get-assets', argv, (error, assets) ->
-        return print(error) if error?
-        for asset in assets when asset.state is 'uploaded' and asset.name is argv.filename
-          return github.downloadAsset asset, (error, stream) ->
-            return console.error("Unable to download #{asset.name}") if error?
-            stream.pipe fs.createWriteStream(asset.name)
-
-    when 'download-assets'
+    when 'download'
       run github, 'get-assets', argv, (error, assets) ->
         return print(error) if error?
         for asset in assets when asset.state is 'uploaded' and minimatch asset.name, argv.filename

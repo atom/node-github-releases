@@ -76,10 +76,4 @@ class GitHub extends Filters
       proxy: process.env.http_proxy || process.env.https_proxy
       headers: headers
 
-  # Private: Filter the array with {filter} if {filter} is a function, otherwise
-  #          filter the array with elements that match the {filter}.
-  filter: (array, filter) ->
-    filter = @constructor.fieldMatchFilter.bind array, filter unless filter instanceof Function
-    array.filter filter
-
 module.exports = GitHub

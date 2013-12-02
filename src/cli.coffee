@@ -12,6 +12,7 @@ options = optimist
   .string('token').describe('token', 'Your GitHub token')
   .string('tag').describe('tag', 'The tag of the release')
   .string('filename').describe('filename', 'The filename of the asset')
+                     .default('filename', '*')
 
 print = (error, result) ->
   if error?
@@ -34,9 +35,9 @@ run = (github, command, argv, callback) ->
       getRelease callback
 
     when 'download'
-      run github, 'get-assets', argv, (error, assets) ->
+      run github, 'show', argv, (error, releases) ->
         return print(error) if error?
-        for asset in assets when asset.state is 'uploaded' and minimatch asset.name, argv.filename
+        for asset in releases.assets when asset.state is 'uploaded' and minimatch asset.name, argv.filename
           do (asset) ->
             github.downloadAsset asset, (error, stream) ->
               return console.error("Unable to download #{asset.name}") if error?

@@ -71,11 +71,13 @@ class GitHub
     # setting headers for it would make the request fail.
     headers =
       if require('url').parse(url).hostname is 'api.github.com'
-        authorization: "token #{@token}"
         accept: 'application/octet-stream'
         'user-agent': 'node-github-releases/0.1.0'
       else
         {}
+
+    # Set access token.
+    headers.authorization = "token #{@token}" if @token?
 
     options =
       url: url

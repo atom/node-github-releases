@@ -1,6 +1,7 @@
 request = require 'request'
+Filters = require './filters'
 
-class GitHub
+class GitHub extends Filters
   repo: null
   token: null
 
@@ -8,24 +9,13 @@ class GitHub
   constructor: ({user, @repo, @token}) ->
     @repo = "#{user}/#{@repo}" if user?
 
-  # Public: List all releases of the repo.
-  getReleases: (callback) ->
-    @callRepoApi 'releases', callback
+  # Public: List all releases of the repo which matches the {filter}.
+  getReleases: (filter, callback) ->
+    [callback, filter] = [filter, {}] if not callback? and filter instanceof Function
 
-  # Public: Find the release whose tag_name is {tag}.
-  getReleaseOfTag: (tag, callback) ->
-    @getReleases (error, releases) ->
+    @callRepoApi 'releases', (error, releases) =>
       return callback(error) if error?
-
-      for release in releases when release.tag_name is tag
-        return callback null, release
-      return callback(new Error("Cannot find release with tag_name of #{tag}"))
-
-  # Public: Get the latest release.
-  getLatestRelease: (callback) ->
-    @getReleases (error, releases) ->
-      return callback(error) if error?
-      callback null, releases[0]
+      callback null, @filter(releases, filter)
 
   # Public: Download the {asset}.
   #
@@ -33,7 +23,7 @@ class GitHub
   downloadAsset: (asset, callback) ->
     @downloadAssetOfUrl asset.url, callback
 
-  # Public: Download the asset of {url}.
+  # Private: Download the asset of {url}.
   #
   # The {callback} would be called with the downloaded file's {ReadableStream}.
   downloadAssetOfUrl: (url, callback) ->
@@ -85,5 +75,11 @@ class GitHub
       followRedirect: false
       proxy: process.env.http_proxy || process.env.https_proxy
       headers: headers
+
+  # Private: Filter the array with {filter} if {filter} is a function, otherwise
+  #          filter the array with elements that match the {filter}.
+  filter: (array, filter) ->
+    filter = @constructor.fieldMatchFilter.bind array, filter unless filter instanceof Function
+    array.filter filter
 
 module.exports = GitHub

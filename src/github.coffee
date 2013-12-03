@@ -57,17 +57,19 @@ class GitHub extends Filters
 
   # Private: Get the options for downloading asset.
   getDownloadOptions: (url) ->
+    isGitHubUrl = require('url').parse(url).hostname is 'api.github.com'
+
     # Only set headers for GitHub host, the url could also be a S3 link and
     # setting headers for it would make the request fail.
     headers =
-      if require('url').parse(url).hostname is 'api.github.com'
+      if isGitHubUrl
         accept: 'application/octet-stream'
         'user-agent': 'node-github-releases/0.1.0'
       else
         {}
 
     # Set access token.
-    headers.authorization = "token #{@token}" if @token?
+    headers.authorization = "token #{@token}" if isGitHubUrl and @token?
 
     options =
       url: url

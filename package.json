@@ -10,13 +10,13 @@
     "prepublish": "grunt coffee"
   },
   "dependencies": {
+    "grunt": "0.4",
     "optimist": "~0.4.0",
     "prettyjson": "~0.8.1",
     "request": "~2.27.0",
     "minimatch": "0.2.12"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
     "grunt-contrib-coffee": "~0.6.6",
     "grunt-coffeelint": "~0.0.6",
     "grunt-cli": "~0.1.7",

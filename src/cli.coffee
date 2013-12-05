@@ -42,6 +42,17 @@ run = (github, command, argv, callback) ->
               return console.error("Unable to download #{asset.name}") if error?
               stream.pipe fs.createWriteStream(asset.name)
 
+    when 'download-all'
+      run github, 'list', argv, (error, releases) ->
+        return callback(error) if error?
+        for release in releases
+          do (release) ->
+            for asset in release.assets when asset.state is 'uploaded' and minimatch asset.name, argv.filename
+              do (asset) ->
+                github.downloadAsset asset, (error, stream) ->
+                  return console.error("Unable to download #{asset.name}") if error?
+                  stream.pipe fs.createWriteStream(asset.name)
+
     else
       console.error "Invalid command: #{command}"
 

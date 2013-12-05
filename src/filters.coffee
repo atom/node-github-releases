@@ -14,7 +14,9 @@ module.exports =
       if filter instanceof RegExp
         filter.test str
       else
-        minimatch str, filter
+        for filter in filter.split ','
+          return true if minimatch str, filter
+        false
 
     # Private: Helper filter to test if {value} matches the {filter}
     fieldMatchFilter: (filter, value) ->

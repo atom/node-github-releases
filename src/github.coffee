@@ -13,8 +13,16 @@ class GitHub extends Filters
   getReleases: (filter, callback) ->
     [callback, filter] = [filter, {}] if not callback? and filter instanceof Function
 
-    @callRepoApi 'releases', (error, releases) =>
+    urlPath = 'releases'
+    responseIsArray = true
+
+    if filter.tag_name?
+      urlPath += "/tags/#{filter.tag_name}"
+      responseIsArray = false
+
+    @callRepoApi urlPath, (error, releases) =>
       return callback(error) if error?
+      releases = [releases] unless responseIsArray
       callback null, @filter(releases, filter)
 
   # Public: Download the {asset}.

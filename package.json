@@ -1,7 +1,7 @@
 {
   "name": "github-releases",
   "description": "Node module for using GitHub Releases feature",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "main": "./lib/github.js",
   "bin": {
     "github-releases": "bin/github-releases"

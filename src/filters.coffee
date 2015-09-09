@@ -10,13 +10,16 @@ module.exports =
       array.filter filter
 
     # Private: Returns whether the string {str} matches the filter {filter}.
-    matches: (str, filter) ->
-      if filter instanceof RegExp
-        filter.test str
-      else
-        for filter in filter.split ','
-          return true if minimatch str, filter
-        false
+    matches: (value, filter) ->
+      switch filter.constructor
+        when RegExp
+          filter.test value
+        when String
+          for filterPart in filter.split ','
+            return true if minimatch(value, filterPart)
+          false
+        else
+          value is filter
 
     # Private: Helper filter to test if {value} matches the {filter}
     fieldMatchFilter: (filter, value) ->

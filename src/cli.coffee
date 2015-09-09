@@ -6,12 +6,13 @@ GitHub     = require '../lib/github'
 
 options = optimist
   .usage("""
-    Usage: github-releases [--tag==<tag>] [--filename=<filename>] [--token=<token>] <command> <repo>
+    Usage: github-releases [--tag==<tag>] [--pre] [--filename=<filename>] [--token=<token>] <command> <repo>
   """)
   .alias('h', 'help').describe('help', 'Print this usage message')
   .string('token').describe('token', 'Your GitHub token')
   .string('tag').describe('tag', 'The tag of the release')
-                .default('tag', '*')
+  .boolean('pre').describe('pre', 'Is the release a pre-release')
+                 .default('pre', false)
   .string('filename').describe('filename', 'The filename of the asset')
                      .default('filename', '*')
 
@@ -25,7 +26,10 @@ print = (error, result) ->
 run = (github, command, argv, callback) ->
   switch command
     when 'list'
-      github.getReleases tag_name: argv.tag, callback
+      filters = {}
+      filters.tag_name = argv.tag if argv.tag?
+      filters.prerelease = argv.pre
+      github.getReleases filters, callback
 
     when 'show'
       run github, 'list', argv, (error, releases) ->

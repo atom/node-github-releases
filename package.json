@@ -10,7 +10,7 @@
     "minimatch": "3.0.4",
     "optimist": "0.6.1",
     "prettyjson": "1.2.1",
-    "request": "2.81.0"
+    "request": "^2.88.0"
   },
   "license": "MIT",
   "repository": "https://github.com/atom/node-github-releases"

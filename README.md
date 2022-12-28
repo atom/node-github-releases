@@ -3,7 +3,6 @@
 
 Node module for accessing GitHub projects' Releases.
 
-## Build
+## Setup
 
 * `npm install .`
-* `grunt`
